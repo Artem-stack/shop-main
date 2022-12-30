@@ -210,6 +210,10 @@
             </div>
         </div>
     </div>
-    <!-- Newsletter -->
+     <!-- Icon Boxes -->
+
+
+                        <div class="icon_box_title"></div>
+              
 
 @endsection

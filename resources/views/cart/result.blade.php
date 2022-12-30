@@ -19,7 +19,7 @@
         </tr>
         @foreach($cartCollection as $item)
         <tr>
-            <td>1</td>
+            <td>{{ $item->id }}</td>
             <td>{{ $item->name }}</td>
             <td>{{ $item->price }}</td>
             <td>{{ $item->quantity }}</td>
@@ -31,7 +31,6 @@
         </tr>
     </table>
 
-    
 
 
 

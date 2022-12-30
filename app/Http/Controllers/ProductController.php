@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Product;
 use Illuminate\Http\Request;
+use Darryldecode\Cart\Facades\CartFacade;
 
 class ProductController extends Controller
 {
@@ -19,16 +20,7 @@ class ProductController extends Controller
         ]);
     }
 
-        public function shows($cat,$product_id){
-        $item = Product::where('id',$product_id)->first();
-        $products = Product::orderBy('price')->take(4)->get();
- 
-
-        return view('product.show',[
-            'item' => $item,
-            'products' => $products
-        ]);
-    }
+       
 
     public function showCategory(Request $request, $cat_alias){
         $cat = Category::where('alias',$cat_alias)->first();

@@ -8,6 +8,7 @@ use App\Category;
 use App\Order;
 use App\OrderItem;
 use Darryldecode\Cart\Facades\CartFacade;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -79,14 +80,10 @@ class CartController extends Controller
 
 
             // валидация пройдена, сохраняем заказ
-         $req=\Cart::session($_COOKIE['cart_id'])->getContent('id');
-        $products = Product::where('id', $request->id)->first();
-   
-
        
-        $cartCollection = \Cart::getContent();
         $review = new Order();
         $price = \Cart::getTotal('price');
+        $review->id = 'id';
         $review->name = $request->input('name');
         $review->email = $request->input('email');
         $review->price = $request->$price = \Cart::getTotal('price');
@@ -94,34 +91,21 @@ class CartController extends Controller
         $review->phone = $request->input('phone');
         $review->comment = $request->input('comment');
              $review->save();
-        
-              
+         
                 return redirect()
-            ->route('result',[
-            'req' => $req,
-            'cartCollection' => $cartCollection,
-            'products' => $products,
-            'name' => $review->name,
-            'email' => $review->email,
-            'price' => $review->price,
-            'address' => $review->address,
-            'phone' => $review->phone,
-
-            ]);
+            ->route('cart.saveorder');
     }
 
      public function result(Request $request){
-        $req=\Cart::session($_COOKIE['cart_id'])->getContent('id');
+        $cart=\Cart::session($_COOKIE['cart_id'])->getContent('id');
         $cartCollection = \Cart::getContent();
-        $products = Product::where('id', $request->id)->first();
         $sum = \Cart::getTotal('price');
-
+          
+        
          return view ('cart.result', [
-            'req' => $req,
+            'cart' => $cart,
             'sum' => $sum,
-            'cartCollection' => $cartCollection,
-            'products' => $products,
-
+            'cartCollection' => $cartCollection, 
             ]);
     
     }

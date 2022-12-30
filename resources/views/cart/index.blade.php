@@ -53,20 +53,14 @@
                   
                     @foreach($cartCollection as $product)
 
-                    @php
-                                $image = '';
-                                if(($product->images) > 0){
-                                    $image = $product->images[0]['img'];
-                                } else {
-                                    $image = 'no_image.png';
-                                }
-                            @endphp
+                
                     <!-- Cart Item -->
                     <div class="cart_item d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
                         <!-- Name -->
                         <div class="cart_item_product d-flex flex-row align-items-center justify-content-start">
                             <div class="cart_item_image">
-                                <div><img src="/images/{{$image}}" alt="{{$product->title}}"></div>
+                              
+                                <div><img src="/images/{{ $product->attributes->img}}" alt=""></div>
                             </div>
                             <div class="cart_item_name_container">
                                 <div class="cart_item_name"><a href="">{{ $product->name}}</a></div>
@@ -102,24 +96,7 @@
                         <div class="button continue_shopping_button"><a href="/">Continue shopping</a></div>
                         <div class="cart_buttons_right ml-lg-auto">
 
-                     <form action="">  
-                       
-                            <div class="button clear_cart_button"><a href="">Clear cart</a></div>
-                               
-                            </form>
-
-                            <div class=""><a href="#"></a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row row_extra">
-                <div class="col-lg-4">
-                 
-
-                  
-
-              <!-- Additional block -->
+                        <!-- Additional block -->
                     <div class="">
                         <div class="section_title"></div>
                         
@@ -147,6 +124,19 @@
                     </div>
                 </div>
             </div>
+
+                            <div class=""><a href="#"></a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row row_extra">
+                <div class="col-lg-4">
+                 
+
+                  
+
+          
         </div>
     </div>
     

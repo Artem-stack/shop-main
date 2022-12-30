@@ -26,7 +26,7 @@ Route::get('/cart/cartplace', 'CartController@cartplace')->name('cartplace');
 
 Route::post('/add-to-cart', 'CartController@addToCart')->name('addToCart');
 Route::delete('/cart/delete/{id}','CartController@destroy')->name('delete');
-Route::post('/', 'CartController@saveOrder')->name('cart.saveorder');
+Route::post('/cart/result', 'CartController@saveOrder')->name('cart.saveorder');
 Route::get('/cart/result', 'CartController@result')->name('result');
 
 

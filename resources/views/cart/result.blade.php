@@ -5,17 +5,18 @@
     margin-right: 55px; 
    }
   </style>
-    <h1>Заказ размещен</h1>
+    <h1>Order placed</h1>
 
-    <p>Ваш заказ успешно размещен. Наш менеджер скоро свяжется с Вами для уточнения деталей.</p>
+    <p>
+Your order has been successfully placed. Our manager will contact you soon to clarify the details.</p>
 
-    <h2>Ваш заказ</h2>
+    <h2>Your order</h2>
     <table width="10 px" class="table table-borderless">
         <tr>
             <th>№</th>
-            <th>Наименование</th>
-            <th>Цена</th>
-            <th>Кол-во</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Qty</th>
         </tr>
         @foreach($cartCollection as $item)
         <tr>
@@ -26,7 +27,7 @@
         </tr>
         @endforeach
         <tr>
-            <th colspan="4" class="text-right">Итого</th>
+            <th colspan="4" class="text-right">Total</th>
             <th>${{$sum}}</th>
         </tr>
     </table>

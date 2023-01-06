@@ -11,13 +11,13 @@ use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+
 class CartController extends Controller
 {
 
     public function index(Request $request){
         $req=\Cart::session($_COOKIE['cart_id'])->getContent('id');
         $cartCollection = \Cart::getContent();
-        $products = Product::where('id', $request->id)->first();
         $sum = \Cart::getTotal('price');
 
          if (\Cart::getContent()->count() == 0) {
@@ -25,8 +25,7 @@ class CartController extends Controller
         } else {
         return view('cart.index',[
             'req' => $req,
-            'cartCollection' => $cartCollection,
-            'products' => $products,
+            'cartCollection' => $cartCollection,    
             'sum' => $sum
         ]);
     }
@@ -65,10 +64,6 @@ class CartController extends Controller
         return back();
     }
 
-    public function getAmount(Request $request) {
-        $amount = \Cart::getTotal('price');
-    }
-
     public function saveOrder(Request $request)
     {
          $this->validate($request, [
@@ -80,13 +75,12 @@ class CartController extends Controller
 
 
             // валидация пройдена, сохраняем заказ
-       
+       $cartCollection = \Cart::getContent();
         $review = new Order();
-        $price = \Cart::getTotal('price');
-        $review->id = 'id';
+  
         $review->name = $request->input('name');
         $review->email = $request->input('email');
-        $review->price = $request->$price = \Cart::getTotal('price');
+        $review->price = $sum = \Cart::getTotal('price');
         $review->address = $request->input('address');
         $review->phone = $request->input('phone');
         $review->comment = $request->input('comment');

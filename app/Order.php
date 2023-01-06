@@ -18,7 +18,7 @@ class Order extends Model
         'phone',
         'address',
         'comment',
-        'amount',
+        'price'
     ];
 }
     

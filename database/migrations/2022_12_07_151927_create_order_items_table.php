@@ -17,8 +17,7 @@ class CreateOrderItemsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('product_id')->unsigned()->nullable();
             $table->string('name');
-            $table->decimal('price')->unsigned();
-            $table->decimal('amount', 10, 2)->unsigned();
+            $table->varchar('price');
         });
     }
 

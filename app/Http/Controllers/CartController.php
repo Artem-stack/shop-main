@@ -10,92 +10,72 @@ use App\OrderItem;
 use Darryldecode\Cart\Facades\CartFacade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-
+use App\Services\CartService;
+use App\Services\CartIndexService;
+use App\Http\Requests\SaveOrderRequest;
 
 class CartController extends Controller
 {
 
-    public function index(Request $request){
-        $req=\Cart::session($_COOKIE['cart_id'])->getContent('id');
-        $cartCollection = \Cart::getContent();
-        $sum = \Cart::getTotal('price');
+     private $cartService;
 
-         if (\Cart::getContent()->count() == 0) {
-            return redirect()->route('home');
-        } else {
-        return view('cart.index',[
-            'req' => $req,
-            'cartCollection' => $cartCollection,    
-            'sum' => $sum
-        ]);
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
     }
-}
 
+     public function index(Request $request)
+    {
+        $cartId = $_COOKIE['cart_id'];
+        $indexData = $this->cartIndexService->getIndexData($cartId);
+
+        if ($indexData['cartCollection']->isEmpty()) {
+            return redirect()->route('home');
+        }
+
+        return view('cart.index', $indexData);
+    }
 
     public function cartplace(){
         return view('cart.cartplace');
     }
 
-    public function addToCart(Request $request){
-        $product = Product::where('id', $request->id)->first();
+    public function addToCart(Request $request)
+    {
+        $productId = $request->input('id');
+        $quantity = $request->input('qty');
+        $cartId = $_COOKIE['cart_id'];
 
-        if(!isset($_COOKIE['cart_id'])) setcookie('cart_id', uniqid());
-        $cart_id = $_COOKIE['cart_id'];
-        \Cart::session($cart_id);
+        $cartContent = $this->cartService->addToCart($productId, $quantity, $cartId);
 
-        \Cart::add([
-            'id' => $product->id,
-            'name' => $product->title,
-            'price' => $product->new_price ? $product->new_price : $product->price,
-            'quantity' => (int) $request->qty,
-            'attributes' => [
-                'img' => isset($product->images[0]->img) ? $product->images[0]->img : 'no_image.png'
-            ]
-        ]);
-
-        return response()->json(\Cart::getContent());
+        return response()->json($cartContent);
     }
 
         public function destroy($id)
     {
-         $cart_id = $_COOKIE['cart_id'];
-        \Cart::session($cart_id)->remove($id);
+        $cartId = $_COOKIE['cart_id'];
+        $productId = $id;
+
+        $cartContent = $this->cartService->removeFromCart($cartId, $productId);
 
         return back();
     }
 
-    public function saveOrder(Request $request)
+   public function saveOrder(SaveOrderRequest $request)
     {
-         $this->validate($request, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:55',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'address' => 'required|max:255',
-             ]);
+        $cartCollection = $this->cartService->getCartContent();
+        $sum = $this->cartService->getTotalPrice();
 
+        $this->cartService->saveOrder($request->validated(), $cartCollection, $sum);
 
-            // валидация пройдена, сохраняем заказ
-       $cartCollection = \Cart::getContent();
-        $review = new Order();
-  
-        $review->name = $request->input('name');
-        $review->email = $request->input('email');
-        $review->price = $sum = \Cart::getTotal('price');
-        $review->address = $request->input('address');
-        $review->phone = $request->input('phone');
-        $review->comment = $request->input('comment');
-             $review->save();
-         
-                return redirect()
-            ->route('cart.saveorder');
+        return redirect()->route('cart.saveorder');
     }
 
      public function result(Request $request){
         $cart=\Cart::session($_COOKIE['cart_id'])->getContent('id');
         $cartCollection = \Cart::getContent();
         $sum = \Cart::getTotal('price');
-          
-        
+           
          return view ('cart.result', [
             'cart' => $cart,
             'sum' => $sum,
